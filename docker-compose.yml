@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  bookify-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - PORT=8080
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+      - JWT_SECRET=${JWT_SECRET}
+      - FRONTEND_URL=${FRONTEND_URL}

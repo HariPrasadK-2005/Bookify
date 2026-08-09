@@ -1,0 +1,13 @@
+bin/
+obj/
+.vs/
+.vscode/
+.git/
+.gitignore
+Dockerfile
+docker-compose*.yml
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+appsettings.Development.json
