@@ -20,6 +20,8 @@ interface BookResponse {
   ownerName: string;
   ownerEmail: string;
   ownerPhone?: string;
+  ownerAverageRating: number;
+  ownerRatingCount: number;
 }
 
 const colors = ["#2F5D4E", "#D6684A", "#B9800F", "#4A5C8C", "#5F3F27", "#8B5E3C"];
@@ -89,7 +91,7 @@ export const SearchBooksPage = () => {
     <div>
       <div className="page-head">
         <h2>Browse Books to Borrow</h2>
-        <p>{books.length} books offered by generous students for lending — Click any card for details & lender contact!</p>
+        <p>{books.length} books offered by generous students for lending — Click any card for details & lender trust ratings!</p>
       </div>
 
       {toastMsg && (
@@ -161,12 +163,15 @@ export const SearchBooksPage = () => {
                   <div className="badge-row mb-2">
                     <span className="badge condition">{b.condition}</span>
                     {b.value ? (
-                      <span className="badge bg-emerald-100 text-emerald-800">Value: ₹{b.value}</span>
+                      <span className="badge bg-emerald-100 text-emerald-800">₹{b.value}</span>
                     ) : null}
                     <span className="badge status-available">Available</span>
                   </div>
-                  <div className="text-xs text-[var(--ink-soft)] font-medium pt-2 border-t border-[var(--line)]">
-                    👤 Lender: {b.ownerName || 'Student'} ({b.ownerCollege})
+                  <div className="text-xs text-[var(--ink-soft)] font-medium pt-2 border-t border-[var(--line)] flex justify-between items-center">
+                    <span>👤 {b.ownerName || 'Student'}</span>
+                    <span className="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                      ⭐ {b.ownerAverageRating} ({b.ownerRatingCount})
+                    </span>
                   </div>
                 </div>
               </div>
@@ -175,7 +180,7 @@ export const SearchBooksPage = () => {
         </div>
       )}
 
-      {/* Book Detail & Lender Contact Info Modal */}
+      {/* Book Detail & Lender Rating Modal */}
       {selectedBook && (
         <div className="modal-backdrop">
           <div className="modal relative">
@@ -228,11 +233,15 @@ export const SearchBooksPage = () => {
                   </p>
                 )}
 
-                {/* Lender Contact Details Card */}
+                {/* Lender Contact Details & Trust Rating */}
                 <div className="pt-3 border-t border-[var(--line)] space-y-1">
-                  <div className="font-bold text-xs text-[var(--forest-dark)] uppercase tracking-wider mb-1">
-                    Lender Contact Details
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-xs text-[var(--forest-dark)] uppercase tracking-wider">Lender & Community Trust</span>
+                    <span className="font-bold text-xs text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
+                      ⭐ {selectedBook.ownerAverageRating} / 5.0 ({selectedBook.ownerRatingCount} ratings)
+                    </span>
                   </div>
+                  
                   <div className="flex items-center gap-2 text-xs font-semibold text-[var(--ink)]">
                     <span className="w-6 h-6 rounded-full bg-[var(--mustard)] text-[#3a2a05] font-serif font-bold flex items-center justify-center text-xs">
                       {selectedBook.ownerName ? selectedBook.ownerName[0].toUpperCase() : 'L'}

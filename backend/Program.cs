@@ -77,6 +77,8 @@ using (var scope = app.Services.CreateScope())
         dbContext.Database.ExecuteSqlRaw(@"ALTER TABLE ""Books"" ADD COLUMN IF NOT EXISTS ""Value"" numeric(18,2) DEFAULT 0;");
         dbContext.Database.ExecuteSqlRaw(@"ALTER TABLE ""ExchangeRequests"" ALTER COLUMN ""OfferedBookId"" DROP NOT NULL;");
         dbContext.Database.ExecuteSqlRaw(@"ALTER TABLE ""Users"" ADD COLUMN IF NOT EXISTS ""PhoneNumber"" text;");
+        dbContext.Database.ExecuteSqlRaw(@"ALTER TABLE ""Users"" ADD COLUMN IF NOT EXISTS ""RatingCount"" integer DEFAULT 0;");
+        dbContext.Database.ExecuteSqlRaw(@"ALTER TABLE ""Users"" ADD COLUMN IF NOT EXISTS ""RatingSum"" integer DEFAULT 0;");
     }
     catch (Exception ex)
     {

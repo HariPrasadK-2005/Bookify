@@ -33,6 +33,8 @@ namespace backend.DTOs
         public string OwnerName { get; set; } = string.Empty;
         public string OwnerEmail { get; set; } = string.Empty;
         public string? OwnerPhone { get; set; }
+        public double OwnerAverageRating { get; set; } = 5.0;
+        public int OwnerRatingCount { get; set; } = 0;
     }
 
     public class WantedBookCreateDto

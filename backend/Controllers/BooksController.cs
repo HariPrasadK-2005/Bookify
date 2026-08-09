@@ -82,7 +82,9 @@ namespace backend.Controllers
                 OwnerCollege = book.Owner!.College,
                 OwnerName = book.Owner!.FullName,
                 OwnerEmail = book.Owner!.Email,
-                OwnerPhone = book.Owner!.PhoneNumber
+                OwnerPhone = book.Owner!.PhoneNumber,
+                OwnerAverageRating = book.Owner!.AverageRating,
+                OwnerRatingCount = book.Owner!.RatingCount
             };
 
             return Ok(response);
@@ -165,7 +167,9 @@ namespace backend.Controllers
                 OwnerCollege = b.Owner!.College,
                 OwnerName = b.Owner!.FullName,
                 OwnerEmail = b.Owner!.Email,
-                OwnerPhone = b.Owner!.PhoneNumber
+                OwnerPhone = b.Owner!.PhoneNumber,
+                OwnerAverageRating = b.Owner!.AverageRating,
+                OwnerRatingCount = b.Owner!.RatingCount
             }).ToListAsync();
 
             return Ok(books);

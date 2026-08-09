@@ -27,10 +27,14 @@ namespace backend.DTOs
         public string SenderName { get; set; } = string.Empty;
         public string SenderEmail { get; set; } = string.Empty;
         public string? SenderPhone { get; set; }
+        public double SenderAverageRating { get; set; } = 5.0;
+        public int SenderRatingCount { get; set; } = 0;
         public int ReceiverId { get; set; }
         public string ReceiverName { get; set; } = string.Empty;
         public string ReceiverEmail { get; set; } = string.Empty;
         public string? ReceiverPhone { get; set; }
+        public double ReceiverAverageRating { get; set; } = 5.0;
+        public int ReceiverRatingCount { get; set; } = 0;
         public int? OfferedBookId { get; set; }
         public string OfferedBookTitle { get; set; } = string.Empty;
         public int RequestedBookId { get; set; }

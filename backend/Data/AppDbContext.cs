@@ -11,6 +11,7 @@ namespace backend.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<WantedBook> WantedBooks { get; set; }
         public DbSet<ExchangeRequest> ExchangeRequests { get; set; }
+        public DbSet<UserRating> UserRatings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

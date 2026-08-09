@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace backend.Models
@@ -33,6 +34,12 @@ namespace backend.Models
         public int Year { get; set; } = 1;
 
         public string? PhoneNumber { get; set; }
+
+        public int RatingCount { get; set; } = 0;
+        public int RatingSum { get; set; } = 0;
+
+        [NotMapped]
+        public double AverageRating => RatingCount > 0 ? Math.Round((double)RatingSum / RatingCount, 1) : 5.0;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
