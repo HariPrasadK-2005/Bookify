@@ -8,6 +8,7 @@ interface User {
   college: string;
   department: string;
   year: number;
+  phoneNumber?: string;
 }
 
 interface AuthContextType {

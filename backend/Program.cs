@@ -7,7 +7,11 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure DbContext
+// Configure binding port for Render / production hosting
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+// Configure DbContext with PostgreSQL (Neon or local)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -24,9 +28,15 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configure JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
+// Configure JWT Authentication (overridden by JWT_SECRET env var if set)
+var jwtSecret = builder.Configuration["JWT_SECRET"] 
+    ?? builder.Configuration["Jwt:Key"] 
+    ?? "this_is_a_very_secret_key_that_should_be_replaced_in_production_environments_12345!";
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "BookExchangeApi";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "BookExchangeClients";
+
+var key = Encoding.ASCII.GetBytes(jwtSecret);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -35,28 +45,35 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false; // For dev
+    options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
-        ValidIssuer = jwtSettings["Issuer"],
+        ValidIssuer = jwtIssuer,
         ValidateAudience = true,
-        ValidAudience = jwtSettings["Audience"],
+        ValidAudience = jwtAudience,
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
     };
 });
 
-// Configure CORS
+// Configure CORS for production & local development
+var allowedOrigins = new List<string> { "http://localhost:5173", "http://localhost:3000" };
+var frontendUrl = builder.Configuration["FRONTEND_URL"];
+if (!string.IsNullOrEmpty(frontendUrl))
+{
+    allowedOrigins.Add(frontendUrl.TrimEnd('/'));
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173", "http://localhost:3000") // Vite default ports
+            policy.WithOrigins(allowedOrigins.ToArray())
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -86,12 +103,9 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Enable Swagger UI in both dev and production for easy API inspection
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("AllowFrontend");
 
