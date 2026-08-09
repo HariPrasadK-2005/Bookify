@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+frontend/dist/
+bin/
+backend/bin/
+obj/
+backend/obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
